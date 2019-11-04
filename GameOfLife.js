@@ -4,8 +4,6 @@
 const { Component } = React;
 const { render } = ReactDOM;
 
-//TODO: move timeLength into state
-
 class Game extends Component {
     constructor({width, height}) {
         super();
@@ -13,9 +11,10 @@ class Game extends Component {
             width,
             height,
             board: [],
+            timeLength: 500,
         }
         this.playInterval = null;
-        this.timeLength = 500;
+        //this.timeLength = 500;
     }
 
     componentDidMount() {
@@ -87,7 +86,7 @@ class Game extends Component {
             ev.target.innerHTML = 'Play';
           }
           else {
-            this.playInterval = setInterval(this.tick, this.timeLength);
+            this.playInterval = setInterval(this.tick, this.state.timeLength);
             ev.target.innerHTML = 'Pause';
           }
     }
@@ -103,28 +102,34 @@ class Game extends Component {
     }
 
     clear = () => {
+        clearInterval(this.playInterval);
+        this.playInterval = null;
         let newBoard = this.makeBoard();
         this.setState({board: newBoard});
     }
 
     speedUp = () => {
-        if (this.timeLength > 100) {
-            this.timeLength -= 100;
+        const { timeLength } = this.state;
+        if (timeLength > 100) {
+            const newTimeLength = timeLength - 100;
             clearInterval(this.playInterval);
-            this.playInterval = setInterval(this.tick, this.timeLength);
+            this.playInterval = setInterval(this.tick, newTimeLength);
+            this.setState({ timeLength: newTimeLength});
           }
     }
 
     speedDown = () => {
-        if (this.timeLength < 2000) {
-            this.timeLength += 100;
+        const { timeLength } = this.state;
+        if (timeLength < 2000) {
+            const newTimeLength = timeLength + 100;
             clearInterval(this.playInterval);
-            this.playInterval = setInterval(this.tick, this.timeLength);
+            this.playInterval = setInterval(this.tick, newTimeLength);
+            this.setState({ timeLength: newTimeLength});
           }
     }
 
     render() {
-        const { board } = this.state;
+        const { board, timeLength } = this.state;
         if (!board.length) {
             return <div>Loading...</div>
         }
@@ -134,13 +139,13 @@ class Game extends Component {
                 <table id="board">
                     <Board board={this.state.board} cellClick={this.cellClick} />
                 </table>
-                <div id="control-panel">
+                <div id="control-panel" className="control-container">
                     <button id="step-btn" onClick={this.tick}>Step</button>
-                    <button id="play-btn" onClick={(ev) => {this.playPause(ev)}}>Play</button>
-                    <button id="random-btn" onClick={this.randomize}>Randomize Board</button>
+                    <button id="play-btn" onClick={(ev) => {this.playPause(ev)}}>{this.playInterval ? 'Pause' : 'Play'}</button>
+                    <button id="random-btn" onClick={this.randomize}>Randomize</button>
                     <button id="clear-btn" onClick={this.clear}>Clear</button>
-                    <button id="speed-up" disabled={this.timeLength < 200 || !this.playInterval} onClick={this.speedUp}>Faster</button>
-                    <button id="speed-down" disabled={this.timeLength > 1000 || !this.playInterval} onClick={this.speedDown}>Slower</button>
+                    <button id="speed-up" disabled={timeLength < 200 || !this.playInterval} onClick={this.speedUp}>Faster</button>
+                    <button id="speed-down" disabled={timeLength > 1000 || !this.playInterval} onClick={this.speedDown}>Slower</button>
                 </div>
             </div>
         )

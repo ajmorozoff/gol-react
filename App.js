@@ -7,7 +7,13 @@ const root = document.getElementById('root');
 class App extends Component {
 
     render() {
-        return <Game width={25} height={25} />
+        return (
+        <div id="app">
+            <Game width={50} height={25} />
+            <div className="footer">
+                Made by Alex Morozoff at Fullstack Academy
+            </div>
+        </div>)
     }
 }
 

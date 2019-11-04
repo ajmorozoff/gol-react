@@ -6,6 +6,7 @@ body {
   
   h1 {
     font-family: 'Roboto Mono', monospace;
+    color: rgba(255,255,255,0.8); 
   }
   
   #container {
@@ -43,19 +44,30 @@ body {
     border-radius: 3px;
     font-size: 0.9em;
     text-align: center;
-    background-color: #09486A;
+    background-color: rgb(22, 36, 59);
     color: #BBC7CE; 
   }
   
-  button:hover, button:focus {
+  button:hover {
     background-color: #07354E;
     color: #FFFFFF;
   }
   
-  button:focus {
-    outline: dashed 1px #2ba6cb;
-  }
 
   button:disabled {
       opacity: 0.3;
+  }
+
+  .control-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 1rem;
+  }
+
+  .footer {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 1rem;
+      color: rgba(255,255,255,0.4); 
   }
